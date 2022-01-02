@@ -1,5 +1,15 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
+
+SDL_Texture* LoadSpritesheet(SDL_Renderer* renderer, const char* path)
+{
+    SDL_Surface* surface = IMG_Load(path);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_FreeSurface(surface);
+    return texture;
+}
 
 int main(int argc, const char* argv[])
 {
@@ -24,6 +34,9 @@ int main(int argc, const char* argv[])
         goto SDL_Quit;
     }
     SDL_SetWindowTitle(window, "Pacman");
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    SDL_Texture* spritesheet = LoadSpritesheet(renderer, "res/spritesheet.png");
 
     bool running = true;
     SDL_Event sdlEvent;
@@ -41,6 +54,7 @@ int main(int argc, const char* argv[])
 
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, spritesheet, NULL, NULL);
         SDL_RenderPresent(renderer);
     }
 
